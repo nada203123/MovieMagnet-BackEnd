@@ -16,6 +16,7 @@ media/
 authentication/cleaned_movies.csv
 authentication/similarity.pkl
 authentication/movies_list.pkl
+movies/settings.py
 
 # Node.js
 node_modules/
