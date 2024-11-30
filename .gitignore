@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment
+myenv/
+venv/
+*.env
+
+# Django
+db.sqlite3
+*.log
+staticfiles/
+media/
+authentication/cleaned_movies.csv
+authentication/similarity.pkl
+authentication/movies_list.pkl
+
+# Node.js
+node_modules/
+package-lock.json
+
+# System and IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
