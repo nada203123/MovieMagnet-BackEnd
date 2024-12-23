@@ -20,16 +20,17 @@ import jwt
 @api_view(['POST'])
 @permission_classes([AllowAny]) 
 def signup(request):
+    print(f"Received request data: {request.data}")
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
         try:
-            otp = send_otp(user.email)  # Ensure `send_otp` handles email exceptions gracefully
+            otp = send_otp(user.email) 
             user.otp = otp
             user.save()
             return Response({"message": "User created, OTP sent"}, status=status.HTTP_201_CREATED)
         except Exception as e:
-            user.delete()  # Remove user if OTP sending fails
+            user.delete()  
             print(f"OTP sending failed: {str(e)}")
             return Response({"error": "Error sending OTP, please try again later."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
@@ -258,15 +259,14 @@ def search_movies(request):
         if not query:
             return Response({"suggestions": []}, status=status.HTTP_200_OK)
 
-        # Load movies data
         pkl_file_path = 'authentication/movies_list.pkl'
         with open(pkl_file_path, 'rb') as file:
             df = pickle.load(file)
 
-        # Filter movies based on the query
+     
         suggestions = df[df['title'].str.lower().str.contains(query, na=False)].head(10)
 
-        # Format suggestions
+        
         suggestions_list = [{"id": row['id'], "title": row['title']} for _, row in suggestions.iterrows()]
         return Response({"suggestions": suggestions_list}, status=status.HTTP_200_OK)
     except Exception as e:
@@ -292,7 +292,7 @@ def add_to_favorites(request):
     if not all([movie_id, title, poster_url, overview, genre, release_date, vote_average]):
         return Response({"error": "All movie details are required!"}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Check if movie is already in favorites
+    
     if Favorite.objects.filter(user=user, movie_id=movie_id).exists():
         return Response({"message": "Movie is already in your favorites!"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -327,7 +327,7 @@ def delete_from_favorites(request):
         return Response({"error": "Movie ID is required!"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # Check if the movie is in the user's favorites
+    
         favorite = Favorite.objects.get(user=user, movie_id=movie_id)
         favorite.delete()
         return Response({"message": "Movie removed from favorites!"}, status=status.HTTP_200_OK)
@@ -339,10 +339,10 @@ def delete_from_favorites(request):
 def get_favorites(request):
     user = request.user
 
-    # Retrieve all favorite movies for the authenticated user
+    
     favorites = Favorite.objects.filter(user=user)
     
-    # Serialize favorite movies into a list of dictionaries
+    
     favorite_movies = [
         {
             "movie_id": favorite.movie_id,
