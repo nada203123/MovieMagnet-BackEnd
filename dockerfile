@@ -3,10 +3,6 @@ FROM python:3.9-slim
 
 RUN apt-get update && apt-get install -y \
     gcc \
-    libmariadb-dev \
-    libmariadb-dev-compat \
-    python3-dev \
-    build-essential \
     pkg-config \
     default-libmysqlclient-dev \
     && rm -rf /var/lib/apt/lists/*
