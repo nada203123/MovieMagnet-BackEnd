@@ -1,13 +1,16 @@
 # Use Python base image
 FROM python:3.9-slim
 
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libmysqlclient-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY . /app
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 # Install Python dependencies
 COPY requirements.txt .
